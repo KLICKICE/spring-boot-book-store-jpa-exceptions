@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/books") // виправлено
+@RequestMapping("/api/books")
 public class BookController {
     private final BookService bookService;
 

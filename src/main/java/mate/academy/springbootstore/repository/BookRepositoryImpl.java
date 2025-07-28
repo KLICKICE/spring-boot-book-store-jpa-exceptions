@@ -40,36 +40,22 @@ public class BookRepositoryImpl implements BookRepository {
 
     @Override
     public List<Book> getAll() {
-        EntityManager entityManager = null;
-        try {
-            entityManager = entityManagerFactory.createEntityManager();
+        try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
             return entityManager
                     .createQuery("SELECT e FROM Book e", Book.class)
                     .getResultList();
         } catch (RuntimeException e) {
-            throw new EntityNotFoundException("Can`t find all objects");
-        }
-        finally {
-            if (entityManager != null && entityManager.isOpen()) {
-                entityManager.close();
-            }
+            throw new DataProcessingException("Can`t find all objects");
         }
     }
 
     @Override
     public Optional<Book> getBookById(Long id) {
-        EntityManager entityManager = null;
-        try {
-            entityManager = entityManagerFactory.createEntityManager();
+        try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
             Book book = entityManager.find(Book.class, id);
             return Optional.ofNullable(book);
         } catch (RuntimeException e) {
-            throw new EntityNotFoundException("Can`t find a book by Id: " + id);
-        }
-        finally {
-            if (entityManager != null && entityManager.isOpen()) {
-                entityManager.close();
-            }
+            throw new DataProcessingException("Can`t find a book by Id: " + id);
         }
     }
 }

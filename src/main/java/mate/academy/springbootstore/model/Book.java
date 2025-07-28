@@ -7,6 +7,8 @@ import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.*;
+
 @Getter
 @Setter
 @Entity
@@ -16,28 +18,21 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
     @Column(nullable = false)
     private String title;
 
-    @NotBlank
     @Column(nullable = false)
     private String author;
 
-    @NotBlank
     @Column(nullable = false, unique = true)
     private String isbn;
 
-    @NotNull
-    @Positive
     @Column(nullable = false)
-    private Double price;
+    private BigDecimal price;
 
-    @NotBlank
     @Column(nullable = false)
     private String description;
 
-    @NotBlank
     @Column(nullable = false)
     private String coverImage;
 }
