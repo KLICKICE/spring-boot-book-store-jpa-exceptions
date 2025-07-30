@@ -6,7 +6,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import lombok.RequiredArgsConstructor;
-import mate.academy.springbootstore.exception.*;
+import mate.academy.springbootstore.exception.DataProcessingException;
 import mate.academy.springbootstore.model.Book;
 import org.springframework.stereotype.Repository;
 
@@ -30,7 +30,7 @@ public class BookRepositoryImpl implements BookRepository {
             if (transaction != null && transaction.isActive()) {
                 transaction.rollback();
             }
-            throw new DataProcessingException("Can't create a new book: " + book);
+            throw new DataProcessingException("Failed to create book: " + book);
         } finally {
             if (entityManager != null && entityManager.isOpen()) {
                 entityManager.close();
@@ -42,10 +42,10 @@ public class BookRepositoryImpl implements BookRepository {
     public List<Book> getAll() {
         try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
             return entityManager
-                    .createQuery("SELECT e FROM Book e", Book.class)
+                    .createQuery("SELECT b FROM Book b", Book.class)
                     .getResultList();
         } catch (RuntimeException e) {
-            throw new DataProcessingException("Can`t find all objects");
+            throw new DataProcessingException("Failed to retrieve all books");
         }
     }
 
@@ -55,7 +55,7 @@ public class BookRepositoryImpl implements BookRepository {
             Book book = entityManager.find(Book.class, id);
             return Optional.ofNullable(book);
         } catch (RuntimeException e) {
-            throw new DataProcessingException("Can`t find a book by Id: " + id);
+            throw new DataProcessingException("Failed to retrieve book with ID: " + id);
         }
     }
 }
