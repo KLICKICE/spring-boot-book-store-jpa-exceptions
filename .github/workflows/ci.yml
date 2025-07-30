@@ -2,7 +2,7 @@ name: Java CI
 
 on:
   push:
-    branches: [ "main", "homework", "feature/**" ]
+    branches: [ "main", "homework" ]
   pull_request:
     branches: [ "main" ]
 
@@ -20,5 +20,5 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Build and run tests
-        run: mvn --batch-mode --update-snapshots clean verify
+      - name: Build and run tests with test profile
+        run: mvn --batch-mode clean verify -Dspring.profiles.active=test
