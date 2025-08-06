@@ -26,7 +26,8 @@ public class BookServiceImpl implements BookService {
     @Override
     public BookDto getBookById(Long id) {
         Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Can't find book by Id: " + id));
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Failed to get book: book with id " + id + " not found"));
         return bookMapper.toDto(book);
     }
 
@@ -40,28 +41,18 @@ public class BookServiceImpl implements BookService {
     @Override
     public void deleteById(Long id) {
         if (!bookRepository.existsById(id)) {
-            throw new EntityNotFoundException("Can't delete book. Id not found: " + id);
+            throw new EntityNotFoundException("Failed to delete book: book with id " + id + " not found");
         }
         bookRepository.deleteById(id);
     }
 
     @Override
-    public BookDto update(BookDto bookDto) {
-        Long id = bookDto.getId();
-        if (id == null) {
-            throw new IllegalArgumentException("Book ID must not be null for update");
-        }
-
+    public BookDto update(Long id, CreateBookRequestDto bookDto) {
         Book bookFromDb = bookRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Can't update book. Id not found: " + id));
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Failed to update book: book with id " + id + " not found"));
 
-        bookFromDb.setTitle(bookDto.getTitle());
-        bookFromDb.setAuthor(bookDto.getAuthor());
-        bookFromDb.setPrice(bookDto.getPrice());
-        bookFromDb.setIsbn(bookDto.getIsbn());
-        bookFromDb.setDescription(bookDto.getDescription());
-        bookFromDb.setCoverImage(bookDto.getCoverImage());
-
+        bookMapper.updateBookFromDto(bookDto, bookFromDb);
 
         Book updatedBook = bookRepository.save(bookFromDb);
         return bookMapper.toDto(updatedBook);
