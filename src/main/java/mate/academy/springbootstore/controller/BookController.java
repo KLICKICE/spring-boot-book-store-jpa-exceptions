@@ -1,6 +1,8 @@
 package mate.academy.springbootstore.controller;
 
 import java.util.List;
+
+import jakarta.validation.*;
 import lombok.RequiredArgsConstructor;
 import mate.academy.springbootstore.dto.BookDto;
 import mate.academy.springbootstore.dto.CreateBookRequestDto;
@@ -45,7 +47,7 @@ public class BookController {
     }
 
     @PutMapping("/{id}")
-    public BookDto updateBook(@PathVariable Long id, @RequestBody CreateBookRequestDto bookDto) {
+    public BookDto updateBook(@PathVariable Long id, @RequestBody @Valid CreateBookRequestDto bookDto) {
         return bookService.update(id, bookDto);
     }
 }
