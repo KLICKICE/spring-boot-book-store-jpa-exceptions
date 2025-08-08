@@ -3,9 +3,10 @@ package mate.academy.springbootstore.service;
 import java.util.List;
 import mate.academy.springbootstore.dto.BookDto;
 import mate.academy.springbootstore.dto.CreateBookRequestDto;
+import org.springframework.data.domain.Pageable;
 
 public interface BookService {
-    List<BookDto> getAll();
+    List<BookDto> getAll(Pageable pageable);
 
     BookDto getBookById(Long id);
 
