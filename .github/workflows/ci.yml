@@ -4,7 +4,7 @@ on:
   push:
     branches: [ "main", "homework", "pagination-sorting-swagger" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "*" ]
 
 jobs:
   build:
