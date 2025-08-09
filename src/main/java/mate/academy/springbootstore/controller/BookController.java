@@ -1,13 +1,13 @@
 package mate.academy.springbootstore.controller;
 
-import java.util.List;
-
-import io.swagger.v3.oas.annotations.*;
-import jakarta.validation.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import mate.academy.springbootstore.dto.BookDto;
 import mate.academy.springbootstore.dto.CreateBookRequestDto;
 import mate.academy.springbootstore.service.BookService;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "Books", description = "Operations related to books")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/books")
@@ -28,7 +29,7 @@ public class BookController {
 
     @GetMapping
     @Operation(summary = "Get all books", description = "Get a list of all available books")
-    public List<BookDto> getAll(Pageable pageable) {
+    public Page<BookDto> getAll(Pageable pageable) {
         return bookService.getAll(pageable);
     }
 

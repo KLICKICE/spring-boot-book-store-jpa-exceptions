@@ -8,7 +8,7 @@ import mate.academy.springbootstore.exception.EntityNotFoundException;
 import mate.academy.springbootstore.mapper.BookMapper;
 import mate.academy.springbootstore.model.Book;
 import mate.academy.springbootstore.repository.BookRepository;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -18,10 +18,9 @@ public class BookServiceImpl implements BookService {
     private final BookMapper bookMapper;
 
     @Override
-    public List<BookDto> getAll(Pageable pageable) {
-        return bookRepository.findAll(pageable).stream()
-                .map(bookMapper::toDto)
-                .toList();
+    public Page<BookDto> getAll(Pageable pageable) {
+        return bookRepository.findAll(pageable)
+                .map(bookMapper::toDto);
     }
 
     @Override
