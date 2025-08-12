@@ -2,7 +2,7 @@ name: Java CI
 
 on:
   push:
-    branches: [ "main", "homework", "pagination-sorting-swagger" ]
+    branches: [ "main", "homework", "pagination-sorting-swagger", "boot-security-add-user" ]
   pull_request:
     branches: [ "*" ]
 
