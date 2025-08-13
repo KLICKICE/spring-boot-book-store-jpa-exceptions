@@ -2,13 +2,12 @@ package mate.academy.springbootstore.config;
 
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.NullValueCheckStrategy;
+import org.mapstruct.MapperConfig;
 
-@org.mapstruct.MapperConfig(
+@MapperConfig(
         componentModel = "spring",
         injectionStrategy = InjectionStrategy.CONSTRUCTOR,
-        nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS,
-        implementationPackage = "<PACKAGE_NAME>.impl"
+        nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS
 )
-public class MapperConfig {
-
+public interface MapConfig {
 }

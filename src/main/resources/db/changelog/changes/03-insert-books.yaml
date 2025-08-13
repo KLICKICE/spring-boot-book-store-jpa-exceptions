@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-sample-books
+      author: KLICKICE
+      changes:
+        - insert:
+            tableName: books
+            columns:
+              - column: { name: title, value: "Shadow Slave" }
+              - column: { name: author, value: "KLICKICE" }
+              - column: { name: isbn, value: "978-431531341351" }
+              - column: { name: price, valueNumeric: 999 }
+              - column: { name: description, value: "Awesome Novel" }
+              - column: { name: cover_image, value: "http://example.com/shadow-slave.jpg" }
+              - column: { name: is_deleted, valueBoolean: false }
+        - insert:
+            tableName: books
+            columns:
+              - column: { name: title, value: "Lord of the Rings" }
+              - column: { name: author, value: "J.R.R. Tolkien" }
+              - column: { name: isbn, value: "978-0618640157" }
+              - column: { name: price, valueNumeric: 1299 }
+              - column: { name: description, value: "Fantasy epic" }
+              - column: { name: cover_image, value: "http://example.com/lotr.jpg" }
+              - column: { name: is_deleted, valueBoolean: false }
