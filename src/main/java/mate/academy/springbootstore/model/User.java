@@ -1,12 +1,16 @@
 package mate.academy.springbootstore.model;
 
 import jakarta.persistence.*;
+import jakarta.persistence.Table;
 import lombok.*;
+import org.hibernate.annotations.*;
 
 @Entity
 @Table(name = "users")
 @Getter
 @Setter
+@SQLDelete(sql = "UPDATE users SET is_deleted = true WHERE id = ?")
+@SQLRestriction("is_deleted = false")
 public class User {
 
     @Id

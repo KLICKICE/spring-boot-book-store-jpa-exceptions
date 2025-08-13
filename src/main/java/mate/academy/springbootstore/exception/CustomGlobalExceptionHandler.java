@@ -65,7 +65,7 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         body.put("message", ex.getMessage());
         body.put("path", request.getDescription(false).replace("uri=", ""));
 
-        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(body, HttpStatus.CONFLICT);
     }
 
 }

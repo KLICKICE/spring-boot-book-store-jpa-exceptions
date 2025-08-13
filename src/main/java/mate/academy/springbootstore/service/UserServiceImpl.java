@@ -3,7 +3,7 @@ package mate.academy.springbootstore.service;
 import lombok.*;
 import mate.academy.springbootstore.dto.UserRegistrationRequestDto;
 import mate.academy.springbootstore.dto.UserResponseDto;
-import mate.academy.springbootstore.exception.RegistrationException;
+import mate.academy.springbootstore.exception.*;
 import mate.academy.springbootstore.mapper.*;
 import mate.academy.springbootstore.model.*;
 import mate.academy.springbootstore.repository.*;
@@ -17,16 +17,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto register(UserRegistrationRequestDto request) throws RegistrationException {
-        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new RegistrationException("Can't register user");
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new RegistrationException(
+                    "User with email '" + request.getEmail() + "' already exists"
+            );
         }
-        User user = new User();
-        user.setEmail(request.getEmail());
-        user.setPassword(request.getPassword());
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
-        user.setShippingAddress(request.getShippingAddress());
-        User savedUser = userRepository.save(user);
-        return userMapper.toDto(savedUser);
+        User user = userMapper.toEntity(request);
+        userRepository.save(user);
+        return userMapper.toDto(user);
+    }
+
+
+    @Override
+    public void deleteById(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new EntityNotFoundException("Failed to delete user: user with id " + id + " not found");
+        }
+        userRepository.deleteById(id);
     }
 }

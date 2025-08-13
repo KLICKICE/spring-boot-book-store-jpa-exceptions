@@ -1,0 +1,34 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-sample-users
+      author: KLICKICE
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column: { name: email, value: "admin@example.com" }
+              - column: { name: password, value: "$2a$10$encryptedpass1" }
+              - column: { name: first_name, value: "Admin" }
+              - column: { name: last_name, value: "User" }
+              - column: { name: shipping_address, value: "Kyiv, Ukraine" }
+              - column: { name: is_deleted, valueBoolean: false }
+
+        - insert:
+            tableName: users
+            columns:
+              - column: { name: email, value: "john@example.com" }
+              - column: { name: password, value: "$2a$10$encryptedpass2" }
+              - column: { name: first_name, value: "John" }
+              - column: { name: last_name, value: "Doe" }
+              - column: { name: shipping_address, value: "Lviv, Ukraine" }
+              - column: { name: is_deleted, valueBoolean: false }
+
+        - insert:
+            tableName: users
+            columns:
+              - column: { name: email, value: "mary@example.com" }
+              - column: { name: password, value: "$2a$10$encryptedpass3" }
+              - column: { name: first_name, value: "Mary" }
+              - column: { name: last_name, value: "Smith" }
+              - column: { name: shipping_address, value: "Odesa, Ukraine" }
+              - column: { name: is_deleted, valueBoolean: false }

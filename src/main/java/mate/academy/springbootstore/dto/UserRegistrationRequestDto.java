@@ -1,5 +1,6 @@
 package mate.academy.springbootstore.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import mate.academy.springbootstore.validation.FieldMatch;
@@ -9,7 +10,7 @@ import org.hibernate.validator.constraints.Length;
 @FieldMatch(first = "password", second = "repeatPassword", message = "Passwords do not match")
 public class UserRegistrationRequestDto {
     @NotBlank
-    @jakarta.validation.constraints.Email
+    @Email
     private String email;
 
     @NotBlank

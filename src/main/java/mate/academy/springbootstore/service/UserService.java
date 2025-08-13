@@ -5,4 +5,6 @@ import mate.academy.springbootstore.exception.*;
 
 public interface UserService {
     UserResponseDto register(UserRegistrationRequestDto request) throws RegistrationException;
+
+    void deleteById(Long id);
 }
