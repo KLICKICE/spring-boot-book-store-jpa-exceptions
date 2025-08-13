@@ -22,12 +22,5 @@ public class AuthenticationController {
     public UserResponseDto register(@Valid @RequestBody UserRegistrationRequestDto request) {
         return userService.register(request);
     }
-
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Delete a user", description = "Delete a user by id")
-    public void delete(@PathVariable Long id) {
-        userService.deleteById(id);
-    }
 }
 

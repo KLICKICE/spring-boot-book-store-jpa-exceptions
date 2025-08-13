@@ -26,13 +26,4 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
         return userMapper.toDto(user);
     }
-
-
-    @Override
-    public void deleteById(Long id) {
-        if (!userRepository.existsById(id)) {
-            throw new EntityNotFoundException("Failed to delete user: user with id " + id + " not found");
-        }
-        userRepository.deleteById(id);
-    }
 }

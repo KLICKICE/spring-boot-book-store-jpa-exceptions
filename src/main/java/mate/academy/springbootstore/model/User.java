@@ -31,4 +31,5 @@ public class User {
 
     private String shippingAddress;
 
+    private boolean isDeleted;
 }
