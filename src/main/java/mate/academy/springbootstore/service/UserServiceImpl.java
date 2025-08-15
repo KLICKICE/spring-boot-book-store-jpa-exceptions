@@ -1,6 +1,6 @@
 package mate.academy.springbootstore.service;
 
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import mate.academy.springbootstore.dto.UserRegistrationRequestDto;
 import mate.academy.springbootstore.dto.UserResponseDto;
 import mate.academy.springbootstore.exception.RegistrationException;
@@ -11,10 +11,12 @@ import mate.academy.springbootstore.repository.RoleRepository;
 import mate.academy.springbootstore.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.*;
 
 import java.util.*;
 
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
@@ -23,7 +25,8 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public UserResponseDto register(UserRegistrationRequestDto request) throws RegistrationException {
+    public UserResponseDto register(UserRegistrationRequestDto request)
+            throws RegistrationException {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new RegistrationException(
                     "User with email '" + request.getEmail() + "' already exists"

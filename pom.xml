@@ -130,11 +130,28 @@
                 <version>${liquibase.version}</version>
                 <configuration>
                     <changeLogFile>src/main/resources/db/changelog/db.changelog-master.yaml</changeLogFile>
-                    <url>jdbc:mysql://localhost:3306/bookstore</url>
-                    <username>root</username>
-                    <password>SunlessGrey0706</password>
-                    <driver>com.mysql.cj.jdbc.Driver</driver>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>3.3.1</version>
+                <configuration>
+                    <configLocation>config/checkstyle/checkstyle.xml</configLocation>
+                    <inputEncoding>UTF-8</inputEncoding>
+                    <outputEncoding>UTF-8</outputEncoding>
+                    <consoleOutput>true</consoleOutput>
+                    <failsOnError>true</failsOnError>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
