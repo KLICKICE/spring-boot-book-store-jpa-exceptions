@@ -12,7 +12,7 @@ import mate.academy.springbootstore.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -34,8 +34,8 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         Role userRole = roleRepository.findByName(Role.RoleName.USER)
                 .orElseThrow(() -> new RuntimeException("Role USER not found"));
-        user.setRoles(Collections.singleton(userRole));
-        User savedUser = userRepository.save(user);
-        return userMapper.toDto(savedUser);
+        user.setRoles(Set.of(userRole));
+        userRepository.save(user);
+        return userMapper.toDto(user);
     }
 }
