@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import mate.academy.springbootstore.dto.UserRegistrationRequestDto;
 import mate.academy.springbootstore.dto.UserResponseDto;
 import mate.academy.springbootstore.service.UserService;
-import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "User management", description = "Operations related to users")
