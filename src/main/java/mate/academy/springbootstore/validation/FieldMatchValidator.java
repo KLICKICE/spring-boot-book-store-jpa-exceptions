@@ -4,11 +4,12 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.beans.BeanWrapperImpl;
 
-import java.util.*;
+import java.util.Objects;
 
 public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Object> {
 
     private String firstFieldName;
+
     private String secondFieldName;
 
     @Override

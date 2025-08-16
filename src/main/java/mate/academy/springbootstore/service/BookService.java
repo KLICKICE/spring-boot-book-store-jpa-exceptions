@@ -2,7 +2,8 @@ package mate.academy.springbootstore.service;
 
 import mate.academy.springbootstore.dto.BookDto;
 import mate.academy.springbootstore.dto.CreateBookRequestDto;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface BookService {
     Page<BookDto> getAll(Pageable pageable);

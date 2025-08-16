@@ -10,14 +10,18 @@ import java.math.BigDecimal;
 public class CreateBookRequestDto {
     @NotBlank
     private String title;
+
     @NotBlank
     private String author;
+
     @NotBlank
     private String isbn;
+
     @NotNull
     @Positive
     private BigDecimal price;
 
     private String description;
+
     private String coverImage;
 }
