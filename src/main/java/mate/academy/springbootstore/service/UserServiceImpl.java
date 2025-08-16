@@ -1,5 +1,6 @@
 package mate.academy.springbootstore.service;
 
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import mate.academy.springbootstore.dto.UserRegistrationRequestDto;
 import mate.academy.springbootstore.dto.UserResponseDto;
@@ -12,8 +13,6 @@ import mate.academy.springbootstore.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Set;
 
 @RequiredArgsConstructor
 @Transactional
