@@ -1,8 +1,8 @@
 package mate.academy.springbootstore.config;
 
 import org.mapstruct.InjectionStrategy;
-import org.mapstruct.NullValueCheckStrategy;
 import org.mapstruct.MapperConfig;
+import org.mapstruct.NullValueCheckStrategy;
 
 @MapperConfig(
         componentModel = "spring",

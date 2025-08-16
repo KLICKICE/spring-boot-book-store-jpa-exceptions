@@ -2,13 +2,13 @@ package mate.academy.springbootstore.validation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import java.util.Objects;
 import org.springframework.beans.BeanWrapperImpl;
-
-import java.util.*;
 
 public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Object> {
 
     private String firstFieldName;
+
     private String secondFieldName;
 
     @Override

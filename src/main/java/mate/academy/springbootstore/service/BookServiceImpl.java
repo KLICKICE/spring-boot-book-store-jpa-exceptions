@@ -7,13 +7,15 @@ import mate.academy.springbootstore.exception.EntityNotFoundException;
 import mate.academy.springbootstore.mapper.BookMapper;
 import mate.academy.springbootstore.model.Book;
 import mate.academy.springbootstore.repository.BookRepository;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
+
     private final BookMapper bookMapper;
 
     @Override
@@ -40,7 +42,8 @@ public class BookServiceImpl implements BookService {
     @Override
     public void deleteById(Long id) {
         if (!bookRepository.existsById(id)) {
-            throw new EntityNotFoundException("Failed to delete book: book with id " + id + " not found");
+            throw new EntityNotFoundException("Failed to delete book: book with id "
+                    + id + " not found");
         }
         bookRepository.deleteById(id);
     }
