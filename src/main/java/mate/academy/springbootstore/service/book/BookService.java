@@ -1,7 +1,7 @@
-package mate.academy.springbootstore.service;
+package mate.academy.springbootstore.service.book;
 
-import mate.academy.springbootstore.dto.BookDto;
-import mate.academy.springbootstore.dto.CreateBookRequestDto;
+import mate.academy.springbootstore.dto.book.BookDto;
+import mate.academy.springbootstore.dto.book.CreateBookRequestDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

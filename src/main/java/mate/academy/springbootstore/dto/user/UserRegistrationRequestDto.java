@@ -1,4 +1,4 @@
-package mate.academy.springbootstore.dto;
+package mate.academy.springbootstore.dto.user;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

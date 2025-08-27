@@ -1,9 +1,9 @@
-package mate.academy.springbootstore.service;
+package mate.academy.springbootstore.service.user;
 
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
-import mate.academy.springbootstore.dto.UserRegistrationRequestDto;
-import mate.academy.springbootstore.dto.UserResponseDto;
+import mate.academy.springbootstore.dto.user.UserRegistrationRequestDto;
+import mate.academy.springbootstore.dto.user.UserResponseDto;
 import mate.academy.springbootstore.exception.RegistrationException;
 import mate.academy.springbootstore.mapper.UserMapper;
 import mate.academy.springbootstore.model.Role;
