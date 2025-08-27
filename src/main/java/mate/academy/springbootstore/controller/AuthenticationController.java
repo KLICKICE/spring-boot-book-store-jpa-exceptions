@@ -31,7 +31,7 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     @Operation(summary = "Log in to an account", description = "Log in to an account")
-    public UserLoginResponseDto login(@RequestBody UserLoginRequestDto requestDto) {
+    public UserLoginResponseDto login(@RequestBody @Valid UserLoginRequestDto requestDto) {
         return authenticationService.authenticate(requestDto);
     }
 }
