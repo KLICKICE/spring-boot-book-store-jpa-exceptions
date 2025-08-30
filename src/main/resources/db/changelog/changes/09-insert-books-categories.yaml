@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-books-categories
+      author: KLICKICE
+      changes:
+        # Shadow Slave → Fiction + Fantasy
+        - insert:
+            tableName: books_categories
+            columns:
+              - column: { name: book_id, valueNumeric: 1 }
+              - column: { name: category_id, valueNumeric: 1 }
+        - insert:
+            tableName: books_categories
+            columns:
+              - column: { name: book_id, valueNumeric: 1 }
+              - column: { name: category_id, valueNumeric: 4 }
+
+        # Lord of the Rings → Fiction + Fantasy
+        - insert:
+            tableName: books_categories
+            columns:
+              - column: { name: book_id, valueNumeric: 2 }
+              - column: { name: category_id, valueNumeric: 1 }
+        - insert:
+            tableName: books_categories
+            columns:
+              - column: { name: book_id, valueNumeric: 2 }
+              - column: { name: category_id, valueNumeric: 4 }

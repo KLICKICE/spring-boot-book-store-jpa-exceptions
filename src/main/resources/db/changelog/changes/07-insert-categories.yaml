@@ -1,0 +1,39 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-sample-categories
+      author: KLICKICE
+      changes:
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: name, value: "Fiction" }
+              - column: { name: description, value: "Fictional literature including novels and short stories" }
+              - column: { name: is_deleted, valueBoolean: false }
+
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: name, value: "Science" }
+              - column: { name: description, value: "Books related to physics, chemistry, biology and other sciences" }
+              - column: { name: is_deleted, valueBoolean: false }
+
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: name, value: "History" }
+              - column: { name: description, value: "Books about historical events and figures" }
+              - column: { name: is_deleted, valueBoolean: false }
+
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: name, value: "Technology" }
+              - column: { name: description, value: "Books about programming, IT, and new technologies" }
+              - column: { name: is_deleted, valueBoolean: false }
+
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: name, value: "Children" }
+              - column: { name: description, value: "Books for children and young readers" }
+              - column: { name: is_deleted, valueBoolean: false }
