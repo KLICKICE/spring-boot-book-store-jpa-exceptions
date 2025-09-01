@@ -1,12 +1,16 @@
 package mate.academy.springbootstore.service.book;
 
+import java.util.HashSet;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import mate.academy.springbootstore.dto.book.BookDto;
 import mate.academy.springbootstore.dto.book.CreateBookRequestDto;
 import mate.academy.springbootstore.exception.EntityNotFoundException;
 import mate.academy.springbootstore.mapper.BookMapper;
 import mate.academy.springbootstore.model.Book;
+import mate.academy.springbootstore.model.Category;
 import mate.academy.springbootstore.repository.BookRepository;
+import mate.academy.springbootstore.repository.CategoryRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -15,6 +19,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
+    private final CategoryRepository categoryRepository;
 
     private final BookMapper bookMapper;
 
@@ -35,6 +40,9 @@ public class BookServiceImpl implements BookService {
     @Override
     public BookDto createBook(CreateBookRequestDto requestDto) {
         Book savedBook = bookMapper.toModel(requestDto);
+        Set<Category> categories = new HashSet<>(categoryRepository
+                .findAllById(requestDto.getCategoryIds()));
+        savedBook.setCategories(categories);
         bookRepository.save(savedBook);
         return bookMapper.toDto(savedBook);
     }
@@ -54,6 +62,9 @@ public class BookServiceImpl implements BookService {
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Failed to update book: book with id " + id + " not found"));
         bookMapper.updateBookFromDto(bookDto, bookFromDb);
+        Set<Category> categories = new HashSet<>(categoryRepository
+                .findAllById(bookDto.getCategoryIds()));
+        bookFromDb.setCategories(categories);
         bookRepository.save(bookFromDb);
         return bookMapper.toDto(bookFromDb);
     }
