@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Category management", description = "Operations related to categories")
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/categoru")
+@RequestMapping("/categories")
 public class CategoryController {
 
     private final CategoryService categoryService;
@@ -33,14 +33,14 @@ public class CategoryController {
     @GetMapping
     @Operation(summary = "Get all categories",
             description = "Get a list of all available categories")
-    Page<CategoryDto> getAll(Pageable pageable) {
+    public Page<CategoryDto> getAll(Pageable pageable) {
         return categoryService.getAll(pageable);
     }
 
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @GetMapping("/{id}")
     @Operation(summary = "Get a category", description = "Get a category by id")
-    CategoryDto getCategoryById(@PathVariable Long id) {
+    public CategoryDto getCategoryById(@PathVariable Long id) {
         return categoryService.getCategoryById(id);
     }
 
@@ -48,14 +48,14 @@ public class CategoryController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create a new category", description = "Create a new category")
-    CategoryDto createCategory(@RequestBody @Valid CreateCategoryRequestDto categoryDto) {
+    public CategoryDto createCategory(@RequestBody @Valid CreateCategoryRequestDto categoryDto) {
         return categoryService.createCategory(categoryDto);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     @Operation(summary = "Update a category", description = "Update a category by id")
-    CategoryDto update(@PathVariable Long id,
+    public CategoryDto update(@PathVariable Long id,
                        @RequestBody @Valid CreateCategoryRequestDto categoryDto) {
         return categoryService.update(id, categoryDto);
     }
@@ -64,7 +64,7 @@ public class CategoryController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Delete a category", description = "Delete a category by id")
-    void deleteById(@PathVariable Long id) {
+    public void deleteById(@PathVariable Long id) {
         categoryService.deleteById(id);
     }
 }
