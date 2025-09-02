@@ -1,6 +1,7 @@
 package mate.academy.springbootstore.service.book;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import mate.academy.springbootstore.dto.book.BookDto;
@@ -40,11 +41,14 @@ public class BookServiceImpl implements BookService {
     @Override
     public BookDto createBook(CreateBookRequestDto requestDto) {
         Book savedBook = bookMapper.toModel(requestDto);
-        Set<Category> categories = new HashSet<>(categoryRepository
-                .findAllById(requestDto.getCategoryIds()));
+        Set<Category> categories = getCategoriesByIds(requestDto.getCategoryIds());
         savedBook.setCategories(categories);
         bookRepository.save(savedBook);
         return bookMapper.toDto(savedBook);
+    }
+
+    private Set<Category> getCategoriesByIds(List<Long> categoryIds) {
+        return new HashSet<>(categoryRepository.findAllById(categoryIds));
     }
 
     @Override
@@ -62,8 +66,7 @@ public class BookServiceImpl implements BookService {
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Failed to update book: book with id " + id + " not found"));
         bookMapper.updateBookFromDto(bookDto, bookFromDb);
-        Set<Category> categories = new HashSet<>(categoryRepository
-                .findAllById(bookDto.getCategoryIds()));
+        Set<Category> categories = getCategoriesByIds(bookDto.getCategoryIds());
         bookFromDb.setCategories(categories);
         bookRepository.save(bookFromDb);
         return bookMapper.toDto(bookFromDb);
