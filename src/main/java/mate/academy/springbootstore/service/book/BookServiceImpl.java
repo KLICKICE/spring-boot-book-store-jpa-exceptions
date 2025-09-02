@@ -47,10 +47,6 @@ public class BookServiceImpl implements BookService {
         return bookMapper.toDto(savedBook);
     }
 
-    private Set<Category> getCategoriesByIds(List<Long> categoryIds) {
-        return new HashSet<>(categoryRepository.findAllById(categoryIds));
-    }
-
     @Override
     public void deleteById(Long id) {
         if (!bookRepository.existsById(id)) {
@@ -70,5 +66,9 @@ public class BookServiceImpl implements BookService {
         bookFromDb.setCategories(categories);
         bookRepository.save(bookFromDb);
         return bookMapper.toDto(bookFromDb);
+    }
+
+    private Set<Category> getCategoriesByIds(List<Long> categoryIds) {
+        return new HashSet<>(categoryRepository.findAllById(categoryIds));
     }
 }
