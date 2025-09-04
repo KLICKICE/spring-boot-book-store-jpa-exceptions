@@ -15,8 +15,10 @@ import mate.academy.springbootstore.repository.BookRepository;
 import mate.academy.springbootstore.repository.CartItemRepository;
 import mate.academy.springbootstore.repository.ShoppingCartRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ShoppingCartServiceImpl implements ShoppingCartService {
     private final ShoppingCartRepository shoppingCartRepository;
@@ -34,7 +36,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public CartItemDto addBookToCart(Long userId, CreateCartItemRequestDto requestDto) {
+    public ShoppingCartDto addBookToCart(Long userId, CreateCartItemRequestDto requestDto) {
         ShoppingCart cart = shoppingCartRepository.findByUserId(userId)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Shopping cart for user id " + userId + " not found"));
@@ -49,23 +51,27 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                     CartItem newItem = new CartItem();
                     newItem.setShoppingCart(cart);
                     newItem.setBook(book);
+                    newItem.setQuantity(0);
                     return newItem;
                 });
 
         cartItem.setQuantity(cartItem.getQuantity() + requestDto.getQuantity());
-        cartItem = cartItemRepository.save(cartItem);
-        return cartItemMapper.toDto(cartItem);
+        cartItemRepository.save(cartItem);
+
+        return shoppingCartMapper.toDto(cart);
     }
 
     @Override
-    public CartItemDto updateCartItemQuantity(Long cartItemId, UpdateCartItemDto requestDto) {
+    public ShoppingCartDto updateCartItemQuantity(Long cartItemId, UpdateCartItemDto requestDto) {
         CartItem cartItem = cartItemRepository.findById(cartItemId)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Cart item with id " + cartItemId + " not found"));
 
         cartItem.setQuantity(requestDto.getQuantity());
-        cartItem = cartItemRepository.save(cartItem);
-        return cartItemMapper.toDto(cartItem);
+        cartItemRepository.save(cartItem);
+
+        ShoppingCart cart = cartItem.getShoppingCart();
+        return shoppingCartMapper.toDto(cart);
     }
 
     @Override
@@ -75,5 +81,13 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                         "Cart item with id " + cartItemId + " not found"));
 
         cartItemRepository.delete(cartItem);
+    }
+
+    @Override
+    public CartItemDto getCartItemById(Long cartItemId) {
+        CartItem cartItem = cartItemRepository.findById(cartItemId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Cart item with id " + cartItemId + " not found"));
+        return cartItemMapper.toDto(cartItem);
     }
 }

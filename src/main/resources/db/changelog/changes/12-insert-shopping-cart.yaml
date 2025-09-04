@@ -4,12 +4,12 @@ databaseChangeLog:
       author: KLICKICE
       changes:
         - insert:
-            tableName: shopping_cart
+            tableName: shopping_carts
             columns:
               - column: { name: user_id, valueComputed: "(SELECT id FROM users WHERE email='john@example.com')" }
               - column: { name: is_deleted, valueBoolean: false }
         - insert:
-            tableName: shopping_cart
+            tableName: shopping_carts
             columns:
               - column: { name: user_id, valueComputed: "(SELECT id FROM users WHERE email='mary@example.com')" }
               - column: { name: is_deleted, valueBoolean: false }

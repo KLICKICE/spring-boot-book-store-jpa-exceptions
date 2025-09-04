@@ -4,15 +4,15 @@ databaseChangeLog:
       author: KLICKICE
       changes:
         - insert:
-            tableName: cart_item
+            tableName: cart_items
             columns:
-              - column: { name: shopping_cart_id, valueComputed: "(SELECT id FROM shopping_cart WHERE user_id=(SELECT id FROM users WHERE email='john@example.com'))" }
+              - column: { name: shopping_cart_id, valueComputed: "(SELECT id FROM shopping_carts WHERE user_id=(SELECT id FROM users WHERE email='john@example.com'))" }
               - column: { name: book_id, valueNumeric: 1 }
               - column: { name: quantity, valueNumeric: 2 }
 
         - insert:
-            tableName: cart_item
+            tableName: cart_items
             columns:
-              - column: { name: shopping_cart_id, valueComputed: "(SELECT id FROM shopping_cart WHERE user_id=(SELECT id FROM users WHERE email='mary@example.com'))" }
+              - column: { name: shopping_cart_id, valueComputed: "(SELECT id FROM shopping_carts WHERE user_id=(SELECT id FROM users WHERE email='mary@example.com'))" }
               - column: { name: book_id, valueNumeric: 2 }
               - column: { name: quantity, valueNumeric: 1 }

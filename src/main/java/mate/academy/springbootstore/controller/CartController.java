@@ -9,7 +9,6 @@ import mate.academy.springbootstore.dto.cart.CreateCartItemRequestDto;
 import mate.academy.springbootstore.dto.cart.ShoppingCartDto;
 import mate.academy.springbootstore.dto.cart.UpdateCartItemDto;
 import mate.academy.springbootstore.model.User;
-import mate.academy.springbootstore.service.cart.CartItemService;
 import mate.academy.springbootstore.service.cart.ShoppingCartService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,11 +27,10 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Shopping Cart management", description = "Operations related to user's shopping cart")
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/cart")
+@RequestMapping("/cart")
 public class CartController {
 
     private final ShoppingCartService shoppingCartService;
-    private final CartItemService cartItemService;
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping
@@ -43,11 +41,19 @@ public class CartController {
     }
 
     @PreAuthorize("hasRole('USER')")
+    @GetMapping("/items/{cartItemId}")
+    @Operation(summary = "Get cart item by id",
+            description = "Retrieve a specific cart item by its id")
+    public ResponseEntity<CartItemDto> getCartItemById(@PathVariable Long cartItemId) {
+        return ResponseEntity.ok(shoppingCartService.getCartItemById(cartItemId));
+    }
+
+    @PreAuthorize("hasRole('USER')")
     @PostMapping
     @Operation(summary = "Add book to cart",
             description = "Add a book to the authenticated user's shopping cart")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<CartItemDto> addBookToCart(
+    public ResponseEntity<ShoppingCartDto> addBookToCart(
             @AuthenticationPrincipal User user,
             @RequestBody @Valid CreateCartItemRequestDto requestDto) {
         return ResponseEntity.ok(shoppingCartService.addBookToCart(user.getId(), requestDto));
@@ -57,7 +63,7 @@ public class CartController {
     @PutMapping("/items/{cartItemId}")
     @Operation(summary = "Update cart item quantity",
             description = "Update quantity of a book in the shopping cart")
-    public ResponseEntity<CartItemDto> updateCartItemQuantity(
+    public ResponseEntity<ShoppingCartDto> updateCartItemQuantity(
             @PathVariable Long cartItemId,
             @RequestBody @Valid UpdateCartItemDto requestDto) {
         return ResponseEntity.ok(shoppingCartService

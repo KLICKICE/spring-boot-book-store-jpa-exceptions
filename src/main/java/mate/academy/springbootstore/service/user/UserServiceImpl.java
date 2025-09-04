@@ -7,8 +7,10 @@ import mate.academy.springbootstore.dto.user.UserResponseDto;
 import mate.academy.springbootstore.exception.RegistrationException;
 import mate.academy.springbootstore.mapper.UserMapper;
 import mate.academy.springbootstore.model.Role;
+import mate.academy.springbootstore.model.ShoppingCart;
 import mate.academy.springbootstore.model.User;
 import mate.academy.springbootstore.repository.RoleRepository;
+import mate.academy.springbootstore.repository.ShoppingCartRepository;
 import mate.academy.springbootstore.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,8 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final ShoppingCartRepository shoppingCartRepository;
 
     @Override
     public UserResponseDto register(UserRegistrationRequestDto request)
@@ -46,7 +50,9 @@ public class UserServiceImpl implements UserService {
 
         user.setRoles(Set.of(userRole));
         userRepository.save(user);
-
+        ShoppingCart shoppingCart = new ShoppingCart();
+        shoppingCart.setUser(user);
+        shoppingCartRepository.save(shoppingCart);
         return userMapper.toDto(user);
     }
 }

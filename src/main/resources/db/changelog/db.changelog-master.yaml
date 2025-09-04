@@ -20,8 +20,8 @@ databaseChangeLog:
   - include:
       file: db/changelog/changes/10-create-shopping_cart.yaml
   - include:
-      file: db/changelog/changes/11-insert-shopping-cart.yaml
+      file: db/changelog/changes/11-create-cart-item-table.yaml
   - include:
-      file: db/changelog/changes/12-create-cart-item-table.yaml
+      file: db/changelog/changes/12-insert-shopping-cart.yaml
   - include:
       file: db/changelog/changes/13-insert-cart-item.yaml

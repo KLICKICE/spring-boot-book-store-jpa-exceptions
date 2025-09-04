@@ -46,7 +46,8 @@ public class User implements UserDetails {
 
     private String shippingAddress;
 
-    private boolean isDeleted;
+    @Column(nullable = false, columnDefinition = "TINYINT(1)")
+    private Boolean isDeleted = false;
 
     @ManyToMany
     @JoinTable(
