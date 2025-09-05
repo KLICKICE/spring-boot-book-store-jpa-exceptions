@@ -41,14 +41,6 @@ public class CartController {
     }
 
     @PreAuthorize("hasRole('USER')")
-    @GetMapping("/items/{cartItemId}")
-    @Operation(summary = "Get cart item by id",
-            description = "Retrieve a specific cart item by its id")
-    public ResponseEntity<CartItemDto> getCartItemById(@PathVariable Long cartItemId) {
-        return ResponseEntity.ok(shoppingCartService.getCartItemById(cartItemId));
-    }
-
-    @PreAuthorize("hasRole('USER')")
     @PostMapping
     @Operation(summary = "Add book to cart",
             description = "Add a book to the authenticated user's shopping cart")
