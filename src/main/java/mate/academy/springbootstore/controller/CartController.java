@@ -55,10 +55,12 @@ public class CartController {
     @Operation(summary = "Update cart item quantity",
             description = "Update quantity of a book in the shopping cart")
     public ResponseEntity<ShoppingCartDto> updateCartItemQuantity(
+            @AuthenticationPrincipal User user,
             @PathVariable Long cartItemId,
             @RequestBody @Valid UpdateCartItemDto requestDto) {
+
         return ResponseEntity.ok(shoppingCartService
-                .updateCartItemQuantity(cartItemId, requestDto));
+                .updateCartItemQuantity(user.getId(), cartItemId, requestDto));
     }
 
     @PreAuthorize("hasRole('USER')")
@@ -66,7 +68,9 @@ public class CartController {
     @Operation(summary = "Remove book from cart",
             description = "Remove a book from the shopping cart")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeCartItem(@PathVariable Long cartItemId) {
-        shoppingCartService.removeCartItem(cartItemId);
+    public void removeCartItem(@AuthenticationPrincipal User user,
+                               @PathVariable Long cartItemId) {
+
+        shoppingCartService.removeCartItem(user.getId(), cartItemId);
     }
 }

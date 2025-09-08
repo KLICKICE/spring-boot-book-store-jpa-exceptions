@@ -1,9 +1,9 @@
 package mate.academy.springbootstore.service.cart;
 
-import mate.academy.springbootstore.dto.cart.CartItemDto;
 import mate.academy.springbootstore.dto.cart.CreateCartItemRequestDto;
 import mate.academy.springbootstore.dto.cart.ShoppingCartDto;
 import mate.academy.springbootstore.dto.cart.UpdateCartItemDto;
+import mate.academy.springbootstore.model.User;
 
 public interface ShoppingCartService {
 
@@ -12,11 +12,12 @@ public interface ShoppingCartService {
     ShoppingCartDto addBookToCart(Long userId,
                                   CreateCartItemRequestDto requestDto);
 
-    ShoppingCartDto updateCartItemQuantity(Long cartItemId,
+    ShoppingCartDto updateCartItemQuantity(Long userId,
+                                           Long cartItemId,
                                            UpdateCartItemDto requestDto);
 
-    void removeCartItem(Long cartItemId);
+    void removeCartItem(Long userId, Long cartItemId);
 
-    CartItemDto getCartItemById(Long cartItemId);
+    void createCartForUser(User user);
 }
 
