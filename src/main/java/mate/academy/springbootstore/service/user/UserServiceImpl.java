@@ -4,7 +4,7 @@ import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import mate.academy.springbootstore.dto.user.UserRegistrationRequestDto;
 import mate.academy.springbootstore.dto.user.UserResponseDto;
-import mate.academy.springbootstore.exception.RegistrationException;
+import mate.academy.springbootstore.exception.*;
 import mate.academy.springbootstore.mapper.UserMapper;
 import mate.academy.springbootstore.model.Role;
 import mate.academy.springbootstore.model.User;
@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         Role userRole = roleRepository.findByName(Role.RoleName.USER)
-                .orElseThrow(() -> new RuntimeException("Role USER not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Role " + Role.RoleName.USER + " not found"));
         user.setRoles(Set.of(userRole));
         userRepository.save(user);
         shoppingCartService.createCartForUser(user);
