@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20250912-update-status-column
+      author: klickice
+      changes:
+        - modifyDataType:
+            tableName: orders
+            columnName: status
+            newDataType: ENUM('pending','completed','delivered','cancelled')
