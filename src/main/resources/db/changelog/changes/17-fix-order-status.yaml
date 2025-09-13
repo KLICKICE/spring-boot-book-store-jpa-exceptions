@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 17
+      author: KLICKICE
+      changes:
+        - modifyDataType:
+            tableName: orders
+            columnName: status
+            newDataType: VARCHAR(20)
+        - sql:
+            sql: |
+              ALTER TABLE orders
+              ADD CONSTRAINT chk_order_status
+              CHECK (status IN ('PENDING','COMPLETED','DELIVERED','CANCELLED'));

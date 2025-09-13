@@ -10,13 +10,11 @@ import mate.academy.springbootstore.model.Order;
 import mate.academy.springbootstore.model.OrderItem;
 import org.mapstruct.Mapper;
 
-@Mapper(config = MapConfig.class)
+@Mapper(config = MapConfig.class, uses = OrderItemMapper.class)
 public interface OrderMapper {
     Order toModel(OrderRequestDto dto);
 
     OrderResponseDto toDto(Order order);
-
-    OrderItemResponseDto toDto(OrderItem orderItem);
 
     List<OrderResponseDto> toDtoList(List<Order> orders);
 

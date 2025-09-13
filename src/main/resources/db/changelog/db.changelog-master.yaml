@@ -31,3 +31,5 @@ databaseChangeLog:
       file: db/changelog/changes/15-fixing-order-table.yaml
   - include:
       file: db/changelog/changes/16-status-enum.yaml
+  - include:
+      file: db/changelog/changes/17-fix-order-status.yaml
