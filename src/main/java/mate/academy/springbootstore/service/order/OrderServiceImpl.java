@@ -4,15 +4,15 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import mate.academy.springbootstore.dto.order.OrderItemResponseDto;
 import mate.academy.springbootstore.dto.order.OrderRequestDto;
 import mate.academy.springbootstore.dto.order.OrderResponseDto;
-import mate.academy.springbootstore.exception.DataProcessingException;
 import mate.academy.springbootstore.exception.EntityNotFoundException;
+import mate.academy.springbootstore.exception.OrderProcessingException;
 import mate.academy.springbootstore.mapper.OrderItemMapper;
 import mate.academy.springbootstore.mapper.OrderMapper;
-import mate.academy.springbootstore.model.CartItem;
 import mate.academy.springbootstore.model.Order;
 import mate.academy.springbootstore.model.OrderItem;
 import mate.academy.springbootstore.model.ShoppingCart;
@@ -37,43 +37,14 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderResponseDto placeOrder(OrderRequestDto orderRequestDto, Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User: " + userId));
+        User user = getUser(userId);
+        ShoppingCart cart = getCart(userId);
+        validateCartNotEmpty(cart);
 
-        ShoppingCart cart = cartRepository.findByUserId(userId)
-                .orElseThrow(() -> new EntityNotFoundException("ShoppingCart: " + userId));
-
-        Set<CartItem> cartItems = cart.getCartItems();
-        if (cartItems.isEmpty()) {
-            throw new DataProcessingException("Cart is empty for user: " + userId);
-        }
-
-        Order order = orderMapper.toModel(orderRequestDto);
-        order.setUser(user);
-        order.setOrderDate(LocalDateTime.now());
-        order.setStatus(Status.PENDING);
-
-        BigDecimal total = cartItems.stream()
-                .map(cartItem -> cartItem.getBook().getPrice()
-                        .multiply(BigDecimal.valueOf(cartItem.getQuantity())))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-        order.setTotal(total);
-
-        Set<OrderItem> orderItems = cartItems.stream()
-                .map(cartItem -> {
-                    OrderItem orderItem = new OrderItem();
-                    orderItem.setOrder(order);
-                    orderItem.setBook(cartItem.getBook());
-                    orderItem.setQuantity(cartItem.getQuantity());
-                    orderItem.setPrice(cartItem.getBook().getPrice());
-                    return orderItem;
-                }).collect(java.util.stream.Collectors.toSet());
-
-        order.setOrderItems(orderItems);
+        Order order = buildOrder(orderRequestDto, user, cart);
         orderRepository.save(order);
 
-        cart.getCartItems().clear();
-        cartRepository.save(cart);
+        clearCart(cart);
 
         return orderMapper.toDto(order);
     }
@@ -116,5 +87,62 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.save(order);
 
         return orderMapper.toDto(order);
+    }
+
+    // ==== PRIVATE HELPERS BELOW ====
+
+    private User getUser(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User: " + userId));
+    }
+
+    private ShoppingCart getCart(Long userId) {
+        return cartRepository.findByUserId(userId)
+                .orElseThrow(() -> new EntityNotFoundException("ShoppingCart: " + userId));
+    }
+
+    private void validateCartNotEmpty(ShoppingCart cart) {
+        if (cart.getCartItems().isEmpty()) {
+            throw new OrderProcessingException("Cart is empty for user: " + cart.getUser().getId());
+        }
+    }
+
+    private Order buildOrder(OrderRequestDto dto, User user, ShoppingCart cart) {
+        Order order = orderMapper.toModel(dto);
+        order.setUser(user);
+        order.setOrderDate(LocalDateTime.now());
+        order.setStatus(Status.PENDING);
+
+        BigDecimal total = calculateTotal(cart);
+        order.setTotal(total);
+
+        Set<OrderItem> orderItems = buildOrderItems(order, cart);
+        order.setOrderItems(orderItems);
+
+        return order;
+    }
+
+    private BigDecimal calculateTotal(ShoppingCart cart) {
+        return cart.getCartItems().stream()
+                .map(cartItem -> cartItem.getBook().getPrice()
+                        .multiply(BigDecimal.valueOf(cartItem.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    private Set<OrderItem> buildOrderItems(Order order, ShoppingCart cart) {
+        return cart.getCartItems().stream()
+                .map(cartItem -> {
+                    OrderItem orderItem = new OrderItem();
+                    orderItem.setOrder(order);
+                    orderItem.setBook(cartItem.getBook());
+                    orderItem.setQuantity(cartItem.getQuantity());
+                    orderItem.setPrice(cartItem.getBook().getPrice());
+                    return orderItem;
+                }).collect(Collectors.toSet());
+    }
+
+    private void clearCart(ShoppingCart cart) {
+        cart.getCartItems().clear();
+        cartRepository.save(cart);
     }
 }
