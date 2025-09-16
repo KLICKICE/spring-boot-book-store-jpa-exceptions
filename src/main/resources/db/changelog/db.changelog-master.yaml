@@ -27,9 +27,3 @@ databaseChangeLog:
       file: db/changelog/changes/13-insert-cart-item.yaml
   - include:
       file: db/changelog/changes/14-create-orders-table.yaml
-  - include:
-      file: db/changelog/changes/15-fixing-order-table.yaml
-  - include:
-      file: db/changelog/changes/16-status-enum.yaml
-  - include:
-      file: db/changelog/changes/17-fix-order-status.yaml

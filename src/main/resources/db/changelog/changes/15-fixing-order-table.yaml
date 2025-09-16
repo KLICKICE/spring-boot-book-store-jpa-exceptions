@@ -1,9 +1,0 @@
-databaseChangeLog:
-  - changeSet:
-      id: update-order-status-column
-      author: KLICKICE
-      changes:
-        - modifyDataType:
-            tableName: orders
-            columnName: status
-            newDataType: VARCHAR(50)

@@ -20,7 +20,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: status
-                  type: VARCHAR(50)
+                  type: VARCHAR(20)
                   constraints:
                     nullable: false
               - column:
@@ -50,6 +50,11 @@ databaseChangeLog:
             referencedTableName: users
             referencedColumnNames: id
             constraintName: fk_orders_user
+        - sql:
+            sql: |
+              ALTER TABLE orders
+              ADD CONSTRAINT chk_order_status
+              CHECK (status IN ('PENDING','COMPLETED','DELIVERED','CANCELLED'));
 
   - changeSet:
       id: create-order-items-table

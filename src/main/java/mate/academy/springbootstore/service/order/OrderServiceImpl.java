@@ -18,6 +18,7 @@ import mate.academy.springbootstore.model.OrderItem;
 import mate.academy.springbootstore.model.ShoppingCart;
 import mate.academy.springbootstore.model.Status;
 import mate.academy.springbootstore.model.User;
+import mate.academy.springbootstore.repository.OrderItemRepository;
 import mate.academy.springbootstore.repository.OrderRepository;
 import mate.academy.springbootstore.repository.ShoppingCartRepository;
 import mate.academy.springbootstore.repository.UserRepository;
@@ -34,6 +35,7 @@ public class OrderServiceImpl implements OrderService {
     private final ShoppingCartRepository cartRepository;
     private final OrderMapper orderMapper;
     private final OrderItemMapper orderItemMapper;
+    private final OrderItemRepository orderItemRepository;
 
     @Override
     public OrderResponseDto placeOrder(OrderRequestDto orderRequestDto, Long userId) {
@@ -58,7 +60,9 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderItemResponseDto> getOrderItems(Long orderId, Long userId) {
         Order order = orderRepository.findByIdAndUserId(orderId, userId)
-                .orElseThrow(() -> new EntityNotFoundException("Order: " + orderId));
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Can't find order with id: " + orderId
+                                + " for user id: " + userId));
 
         return order.getOrderItems().stream()
                 .map(orderItemMapper::toDto)
@@ -66,14 +70,13 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderItemResponseDto getOrderItem(Long orderId, Long itemId, Long userId) {
-        Order order = orderRepository.findByIdAndUserId(orderId, userId)
-                .orElseThrow(() -> new EntityNotFoundException("Order: " + orderId));
-
-        OrderItem item = order.getOrderItems().stream()
-                .filter(orderItem -> orderItem.getId().equals(itemId))
-                .findFirst()
-                .orElseThrow(() -> new EntityNotFoundException("OrderItem: " + itemId));
+    public OrderItemResponseDto getOrderItem(Long orderId,
+                                             Long itemId, Long userId) {
+        OrderItem item = orderItemRepository.findByIdAndOrderIdAndOrderUserId(itemId,
+                        orderId, userId)
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Can't find order item with id: " + itemId
+                                + " for order id: " + orderId + " and user id: " + userId));
 
         return orderItemMapper.toDto(item);
     }
@@ -81,7 +84,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderResponseDto updateOrderStatus(Long orderId, Status status) {
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new EntityNotFoundException("Order: " + orderId));
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Can't find order with id: " + orderId));
 
         order.setStatus(status);
         orderRepository.save(order);
@@ -89,21 +93,23 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.toDto(order);
     }
 
-    // ==== PRIVATE HELPERS BELOW ====
-
     private User getUser(Long userId) {
         return userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User: " + userId));
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Can't find user with id: " + userId));
     }
 
     private ShoppingCart getCart(Long userId) {
         return cartRepository.findByUserId(userId)
-                .orElseThrow(() -> new EntityNotFoundException("ShoppingCart: " + userId));
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Can't find shopping cart for user id: "
+                                + userId));
     }
 
     private void validateCartNotEmpty(ShoppingCart cart) {
         if (cart.getCartItems().isEmpty()) {
-            throw new OrderProcessingException("Cart is empty for user: " + cart.getUser().getId());
+            throw new OrderProcessingException("Cart is empty for user id: "
+                    + cart.getUser().getId());
         }
     }
 
