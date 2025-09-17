@@ -2,7 +2,7 @@ name: Java CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "docker-added" ]
   pull_request:
     branches: [ "*" ]
 
