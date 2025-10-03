@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,8 +58,7 @@ class BookControllerTest {
     @Test
     @DisplayName("Create a new book")
     void createBook_ValidRequestDto_success() throws Exception {
-
-        CreateBookRequestDto requestDto = createBookRequestDto("978-3-16-148410-0");
+        CreateBookRequestDto requestDto = createBookRequestDto("978-1-23-456789-0");
 
         MvcResult result = mockMvc.perform(post("/books")
                         .content(toJson(requestDto))
@@ -80,20 +80,10 @@ class BookControllerTest {
 
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     @Test
+    @Sql(scripts = "classpath:testdata/books.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @DisplayName("Delete Book by id successfully")
     void deleteBookById_ValidId_success() throws Exception {
-
-        CreateBookRequestDto requestDto = createBookRequestDto("978-3-16-148410-0");
-
-        MvcResult createResult = mockMvc.perform(post("/books")
-                        .content(toJson(requestDto))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
-                .andReturn();
-
-        BookDto createdBook = fromJson(createResult, BookDto.class);
-
-        mockMvc.perform(delete("/books/{id}", createdBook.getId()))
+        mockMvc.perform(delete("/books/{id}", 100))
                 .andExpect(status().isNoContent());
     }
 }
