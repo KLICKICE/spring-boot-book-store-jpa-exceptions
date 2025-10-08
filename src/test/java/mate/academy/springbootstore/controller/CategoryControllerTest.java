@@ -60,10 +60,9 @@ class CategoryControllerTest {
 
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     @Test
-    @Sql(scripts = "../../../../../resources/testData/categories.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/categories.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @DisplayName("Delete category by id successfully")
     void deleteCategoryById_ValidId_success() throws Exception {
-        // When & Then
         mockMvc.perform(delete("/categories/{id}", 200))
                 .andExpect(status().isNoContent());
     }

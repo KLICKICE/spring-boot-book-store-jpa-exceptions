@@ -98,10 +98,9 @@ class BookControllerTest {
 
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     @Test
-    @Sql(scripts = "../../../../../resources/testData/books.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testData/books.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @DisplayName("Delete Book by id successfully")
     void deleteBookById_ValidId_success() throws Exception {
-        // When & Then
         mockMvc.perform(delete("/books/{id}", 100))
                 .andExpect(status().isNoContent());
     }
