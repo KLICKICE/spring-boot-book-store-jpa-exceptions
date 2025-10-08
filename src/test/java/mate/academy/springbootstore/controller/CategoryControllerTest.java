@@ -10,13 +10,14 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -48,36 +49,20 @@ class CategoryControllerTest {
 
         // Then
         CategoryDto actual = objectMapper.readValue(result.getResponse().getContentAsString(), CategoryDto.class);
-        assertNotNull(actual);
-        assertNotNull(actual.getId());
-        assertEquals("Fiction", actual.getName());
-        assertEquals("Books with fictional stories", actual.getDescription());
+        assertAll(
+                () -> assertNotNull(actual.getId()),
+                () -> assertEquals("Fiction", actual.getName()),
+                () -> assertEquals("Books with fictional stories", actual.getDescription())
+        );
     }
 
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     @Test
+    @Sql(scripts = "classpath:testdata/categories.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @DisplayName("Delete category by id successfully")
     void deleteCategoryById_ValidId_success() throws Exception {
-        //Given
-        CreateCategoryRequestDto requestDto = new CreateCategoryRequestDto();
-        requestDto.setName("CategoryToDelete");
-        requestDto.setDescription("To be deleted");
-
-        String jsonRequest = objectMapper.writeValueAsString(requestDto);
-
-        //When
-        MvcResult createResult = mockMvc.perform(post("/categories")
-                        .content(jsonRequest)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
-                .andReturn();
-        //Then
-        CategoryDto createdCategory = objectMapper.readValue(
-                createResult.getResponse().getContentAsString(),
-                CategoryDto.class
-        );
-
-        mockMvc.perform(delete("/categories/{id}", createdCategory.getId()))
+        // When & Then
+        mockMvc.perform(delete("/categories/{id}", 200))
                 .andExpect(status().isNoContent());
     }
 }
