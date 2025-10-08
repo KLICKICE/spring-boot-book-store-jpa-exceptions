@@ -98,7 +98,7 @@ class BookControllerTest {
 
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     @Test
-    @Sql(scripts = "classpath:testdata/books.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/testdata/books.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @DisplayName("Delete Book by id successfully")
     void deleteBookById_ValidId_success() throws Exception {
         // When & Then
