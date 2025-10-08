@@ -33,6 +33,7 @@ class CategoryControllerTest {
 
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     @Test
+    @Sql(scripts = "/testData/categories.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @DisplayName("Create a new category successfully")
     void createCategory_ValidRequestDto_success() throws Exception {
         // Given

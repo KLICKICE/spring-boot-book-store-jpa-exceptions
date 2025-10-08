@@ -68,10 +68,14 @@ class BookControllerTest {
 
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     @Test
+    @Sql(
+            scripts = {"/testData/cleanup.sql", "/testData/books.sql"},
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
+    )
     @DisplayName("Create a new book successfully")
     void createBook_ValidRequestDto_success() throws Exception {
         // Given
-        CreateBookRequestDto requestDto = createBookRequestDto("978-1-23-456789-0");
+        CreateBookRequestDto requestDto = createBookRequestDto("978-9-99-999999-9");
         BookDto expected = createExpectedBookDto(requestDto);
 
         // When
