@@ -60,7 +60,7 @@ class CategoryControllerTest {
 
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     @Test
-    @Sql(scripts = "/testdata/categories.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "../../../../../resources/testData/categories.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @DisplayName("Delete category by id successfully")
     void deleteCategoryById_ValidId_success() throws Exception {
         // When & Then
