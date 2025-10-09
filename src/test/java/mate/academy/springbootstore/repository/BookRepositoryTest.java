@@ -1,12 +1,17 @@
 package mate.academy.springbootstore.repository;
 
-import mate.academy.springbootstore.model.*;
-import org.junit.jupiter.api.*;
-import org.springframework.beans.factory.annotation.*;
-import org.springframework.boot.test.autoconfigure.jdbc.*;
-import org.springframework.boot.test.autoconfigure.orm.jpa.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.math.*;
+import java.math.BigDecimal;
+import mate.academy.springbootstore.model.Book;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -26,13 +31,15 @@ class BookRepositoryTest {
         book.setIsbn("123-456-789");
         book.setPrice(BigDecimal.valueOf(999));
         book.setDescription("Night book");
+
         Book savedBook = bookRepository.save(book);
-        Assertions.assertNotNull(savedBook.getId());
-        Assertions.assertEquals("Sunless", savedBook.getAuthor());
-        Assertions.assertEquals("Lost from Light", savedBook.getTitle());
-        Assertions.assertEquals("123-456-789", savedBook.getIsbn());
-        Assertions.assertEquals(BigDecimal.valueOf(999), savedBook.getPrice());
-        Assertions.assertEquals("Night book", savedBook.getDescription());
+
+        assertNotNull(savedBook.getId());
+        assertEquals("Sunless", savedBook.getAuthor());
+        assertEquals("Lost from Light", savedBook.getTitle());
+        assertEquals("123-456-789", savedBook.getIsbn());
+        assertEquals(BigDecimal.valueOf(999), savedBook.getPrice());
+        assertEquals("Night book", savedBook.getDescription());
     }
 
     @Test
@@ -49,14 +56,13 @@ class BookRepositoryTest {
 
         Book savedBook = bookRepository.save(book);
 
-        Assertions.assertTrue(bookRepository.findById(savedBook.getId()).isPresent());
+        assertTrue(bookRepository.findById(savedBook.getId()).isPresent());
     }
-
 
     @Test
     @DisplayName("""
-        Find book by id and then do soft delete
-        """)
+            Find book by id and then do soft delete
+            """)
     void deleteBookWithSoftDelete_success() {
         Book book = new Book();
         book.setAuthor("Sunless");
@@ -67,18 +73,18 @@ class BookRepositoryTest {
 
         Book savedBook = bookRepository.save(book);
 
-        Assertions.assertTrue(bookRepository.findById(savedBook.getId()).isPresent());
+        assertTrue(bookRepository.findById(savedBook.getId()).isPresent());
 
         bookRepository.deleteById(savedBook.getId());
 
-        Assertions.assertTrue(bookRepository.findById(savedBook.getId()).isEmpty());
+        assertTrue(bookRepository.findById(savedBook.getId()).isEmpty());
     }
 
     @Test
     @DisplayName("Save book without mandatory fields should throw exception")
     void saveBook_missingMandatoryFields_throwsException() {
         Book book = new Book();
-        Assertions.assertThrows(Exception.class, () -> bookRepository.saveAndFlush(book));
+        assertThrows(Exception.class, () -> bookRepository.saveAndFlush(book));
     }
 
     @Test
@@ -97,6 +103,6 @@ class BookRepositoryTest {
         book2.setPrice(BigDecimal.ONE);
 
         bookRepository.saveAndFlush(book1);
-        Assertions.assertThrows(Exception.class, () -> bookRepository.saveAndFlush(book2));
+        assertThrows(Exception.class, () -> bookRepository.saveAndFlush(book2));
     }
 }

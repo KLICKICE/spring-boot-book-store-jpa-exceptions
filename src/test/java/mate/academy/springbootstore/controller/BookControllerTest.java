@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -34,6 +33,42 @@ class BookControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    @Test
+    @Sql(
+            scripts = {"/testData/cleanup.sql", "/testData/books.sql"},
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
+    )
+    @DisplayName("Create a new book successfully")
+    void createBook_ValidRequestDto_success() throws Exception {
+        // Given
+        CreateBookRequestDto requestDto = createBookRequestDto("978-9-99-999999-9");
+        BookDto expected = createExpectedBookDto(requestDto);
+
+        // When
+        MvcResult result = mockMvc.perform(post("/books")
+                        .content(toJson(requestDto))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        BookDto actual = fromJson(result, BookDto.class);
+
+        // Then
+        assertNotNull(actual.getId());
+        assertEquals(expected, actual);
+        assertEquals(requestDto.getCategoryIds().size(), actual.getCategories().size());
+    }
+
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    @Test
+    @Sql(scripts = "/testData/books.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @DisplayName("Delete Book by id successfully")
+    void deleteBookById_ValidId_success() throws Exception {
+        mockMvc.perform(delete("/books/{id}", 100))
+                .andExpect(status().isNoContent());
+    }
 
     private CreateBookRequestDto createBookRequestDto(String isbn) {
         CreateBookRequestDto dto = new CreateBookRequestDto();
@@ -64,48 +99,5 @@ class BookControllerTest {
 
     private <T> T fromJson(MvcResult result, Class<T> clazz) throws Exception {
         return objectMapper.readValue(result.getResponse().getContentAsString(), clazz);
-    }
-
-    @WithMockUser(username = "admin", roles = {"ADMIN"})
-    @Test
-    @Sql(
-            scripts = {"/testData/cleanup.sql", "/testData/books.sql"},
-            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
-    )
-    @DisplayName("Create a new book successfully")
-    void createBook_ValidRequestDto_success() throws Exception {
-        // Given
-        CreateBookRequestDto requestDto = createBookRequestDto("978-9-99-999999-9");
-        BookDto expected = createExpectedBookDto(requestDto);
-
-        // When
-        MvcResult result = mockMvc.perform(post("/books")
-                        .content(toJson(requestDto))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
-                .andReturn();
-
-        BookDto actual = fromJson(result, BookDto.class);
-
-        // Then
-        assertNotNull(actual.getId());
-        assertAll(
-                () -> assertEquals(expected.getTitle(), actual.getTitle()),
-                () -> assertEquals(expected.getAuthor(), actual.getAuthor()),
-                () -> assertEquals(expected.getIsbn(), actual.getIsbn()),
-                () -> assertEquals(expected.getPrice(), actual.getPrice()),
-                () -> assertEquals(expected.getDescription(), actual.getDescription()),
-                () -> assertEquals(expected.getCoverImage(), actual.getCoverImage()),
-                () -> assertEquals(requestDto.getCategoryIds().size(), actual.getCategories().size())
-        );
-    }
-
-    @WithMockUser(username = "admin", roles = {"ADMIN"})
-    @Test
-    @Sql(scripts = "/testData/books.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @DisplayName("Delete Book by id successfully")
-    void deleteBookById_ValidId_success() throws Exception {
-        mockMvc.perform(delete("/books/{id}", 100))
-                .andExpect(status().isNoContent());
     }
 }

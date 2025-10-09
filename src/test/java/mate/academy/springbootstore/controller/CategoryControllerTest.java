@@ -14,7 +14,6 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -37,26 +36,21 @@ class CategoryControllerTest {
     @DisplayName("Create a new category successfully")
     void createCategory_ValidRequestDto_success() throws Exception {
         // Given
-        CreateCategoryRequestDto requestDto = new CreateCategoryRequestDto();
-        requestDto.setName("Fiction");
-        requestDto.setDescription("Books with fictional stories");
-
-        String jsonRequest = objectMapper.writeValueAsString(requestDto);
+        CreateCategoryRequestDto requestDto = createCategoryRequestDto();
+        CategoryDto expected = createExpectedCategoryDto(requestDto);
 
         // When
         MvcResult result = mockMvc.perform(post("/categories")
-                        .content(jsonRequest)
+                        .content(toJson(requestDto))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andReturn();
 
+        CategoryDto actual = fromJson(result, CategoryDto.class);
+
         // Then
-        CategoryDto actual = objectMapper.readValue(result.getResponse().getContentAsString(), CategoryDto.class);
-        assertAll(
-                () -> assertNotNull(actual.getId()),
-                () -> assertEquals("Fiction", actual.getName()),
-                () -> assertEquals("Books with fictional stories", actual.getDescription())
-        );
+        assertNotNull(actual.getId());
+        assertEquals(expected, actual);
     }
 
     @WithMockUser(username = "admin", roles = {"ADMIN"})
@@ -66,5 +60,27 @@ class CategoryControllerTest {
     void deleteCategoryById_ValidId_success() throws Exception {
         mockMvc.perform(delete("/categories/{id}", 200))
                 .andExpect(status().isNoContent());
+    }
+
+    private CreateCategoryRequestDto createCategoryRequestDto() {
+        CreateCategoryRequestDto dto = new CreateCategoryRequestDto();
+        dto.setName("Fiction");
+        dto.setDescription("Books with fictional stories");
+        return dto;
+    }
+
+    private CategoryDto createExpectedCategoryDto(CreateCategoryRequestDto requestDto) {
+        CategoryDto dto = new CategoryDto();
+        dto.setName(requestDto.getName());
+        dto.setDescription(requestDto.getDescription());
+        return dto;
+    }
+
+    private String toJson(Object obj) throws Exception {
+        return objectMapper.writeValueAsString(obj);
+    }
+
+    private <T> T fromJson(MvcResult result, Class<T> clazz) throws Exception {
+        return objectMapper.readValue(result.getResponse().getContentAsString(), clazz);
     }
 }

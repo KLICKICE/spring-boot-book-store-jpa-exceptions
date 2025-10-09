@@ -1,7 +1,8 @@
 package mate.academy.springbootstore.repository;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import mate.academy.springbootstore.model.Category;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +24,12 @@ class CategoryRepositoryTest {
         Category category = new Category();
         category.setName("Black life");
         category.setDescription("Category about shadows");
+
         Category savedCategory = categoryRepository.save(category);
-        Assertions.assertNotNull(savedCategory.getId());
-        Assertions.assertEquals("Black life", savedCategory.getName());
-        Assertions.assertEquals("Category about shadows", savedCategory.getDescription());
+
+        assertNotNull(savedCategory.getId());
+        assertEquals("Black life", savedCategory.getName());
+        assertEquals("Category about shadows", savedCategory.getDescription());
     }
 
     @Test
@@ -37,22 +40,28 @@ class CategoryRepositoryTest {
         Category category = new Category();
         category.setName("Black life");
         category.setDescription("Category about shadows");
+
         Category savedCategory = categoryRepository.save(category);
-        Assertions.assertTrue(categoryRepository.findById(savedCategory.getId()).isPresent());
+
+        assertTrue(categoryRepository.findById(savedCategory.getId()).isPresent());
     }
 
     @Test
     @DisplayName("""
             Delete category by id
             """)
-    void deleteCategory_byId_success () {
+    void deleteCategory_byId_success() {
         Category category = new Category();
         category.setName("Black life");
         category.setDescription("Category about shadows");
+
         Category savedCategory = categoryRepository.save(category);
-        Assertions.assertTrue(categoryRepository.findById(savedCategory.getId()).isPresent());
+
+        assertTrue(categoryRepository.findById(savedCategory.getId()).isPresent());
+
         categoryRepository.deleteById(savedCategory.getId());
-        Assertions.assertTrue(categoryRepository.findById(savedCategory.getId()).isEmpty());
+
+        assertTrue(categoryRepository.findById(savedCategory.getId()).isEmpty());
     }
 
     @Test
@@ -61,6 +70,7 @@ class CategoryRepositoryTest {
             """)
     void saveCategory_withoutMandatoryFields_failure() {
         Category category = new Category();
-        Assertions.assertThrows(Exception.class, () -> categoryRepository.saveAndFlush(category));
+
+        assertThrows(Exception.class, () -> categoryRepository.saveAndFlush(category));
     }
 }
