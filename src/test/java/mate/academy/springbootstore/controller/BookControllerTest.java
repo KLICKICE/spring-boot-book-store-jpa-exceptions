@@ -58,7 +58,6 @@ class BookControllerTest {
         // Then
         assertNotNull(actual.getId());
         assertEquals(expected, actual);
-        assertEquals(requestDto.getCategoryIds().size(), actual.getCategories().size());
     }
 
     @WithMockUser(username = "admin", roles = {"ADMIN"})

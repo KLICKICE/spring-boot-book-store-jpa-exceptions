@@ -7,18 +7,19 @@ import mate.academy.springbootstore.model.Book;
 import mate.academy.springbootstore.model.Category;
 import mate.academy.springbootstore.repository.BookRepository;
 import mate.academy.springbootstore.repository.CategoryRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class BookServiceImplTest {
@@ -50,15 +51,15 @@ class BookServiceImplTest {
         bookDto.setId(id);
         bookDto.setTitle("Lost from Light");
 
-        Mockito.when(bookRepository.findById(id)).thenReturn(Optional.of(book));
-        Mockito.when(bookMapper.toDto(book)).thenReturn(bookDto);
+        when(bookRepository.findById(id)).thenReturn(Optional.of(book));
+        when(bookMapper.toDto(book)).thenReturn(bookDto);
 
         BookDto actual = bookService.getBookById(id);
 
-        Assertions.assertNotNull(actual);
-        Assertions.assertEquals("Lost from Light", actual.getTitle());
-        Mockito.verify(bookRepository, Mockito.times(1)).findById(id);
-        Mockito.verify(bookMapper, Mockito.times(1)).toDto(book);
+        assertNotNull(actual);
+        assertEquals("Lost from Light", actual.getTitle());
+        verify(bookRepository, times(1)).findById(id);
+        verify(bookMapper, times(1)).toDto(book);
     }
 
     @Test
@@ -68,12 +69,12 @@ class BookServiceImplTest {
     void deleteBook_ById_success() {
         Long id = 1L;
 
-        Mockito.when(bookRepository.existsById(id)).thenReturn(true);
+        when(bookRepository.existsById(id)).thenReturn(true);
 
-        Assertions.assertDoesNotThrow(() -> bookService.deleteById(id));
+        assertDoesNotThrow(() -> bookService.deleteById(id));
 
-        Mockito.verify(bookRepository).existsById(id);
-        Mockito.verify(bookRepository).deleteById(id);
+        verify(bookRepository).existsById(id);
+        verify(bookRepository).deleteById(id);
     }
 
     @Test
@@ -99,19 +100,17 @@ class BookServiceImplTest {
 
         List<Category> categories = List.of(new Category(), new Category());
 
-        Mockito.when(bookMapper.toModel(createBookRequestDto)).thenReturn(book);
-        Mockito.when(categoryRepository.findAllById(createBookRequestDto.getCategoryIds()))
-                .thenReturn(categories);
-        Mockito.when(bookMapper.toDto(book)).thenReturn(bookDto);
+        when(bookMapper.toModel(createBookRequestDto)).thenReturn(book);
+        when(categoryRepository.findAllById(createBookRequestDto.getCategoryIds())).thenReturn(categories);
+        when(bookMapper.toDto(book)).thenReturn(bookDto);
 
         BookDto actual = bookService.createBook(createBookRequestDto);
 
-        Assertions.assertNotNull(actual);
-        Assertions.assertEquals("Lost from Light", actual.getTitle());
+        assertNotNull(actual);
+        assertEquals("Lost from Light", actual.getTitle());
 
-        Mockito.verify(bookRepository).save(book);
-        Mockito.verify(categoryRepository).findAllById(createBookRequestDto.getCategoryIds());
-        Mockito.verify(bookMapper).toDto(book);
+        verify(bookRepository).save(book);
+        verify(categoryRepository).findAllById(createBookRequestDto.getCategoryIds());
+        verify(bookMapper).toDto(book);
     }
-
 }
