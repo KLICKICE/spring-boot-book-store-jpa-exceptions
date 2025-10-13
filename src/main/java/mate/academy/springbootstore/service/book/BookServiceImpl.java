@@ -15,6 +15,7 @@ import mate.academy.springbootstore.repository.CategoryRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -39,6 +40,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional
     public BookDto createBook(CreateBookRequestDto requestDto) {
         Book savedBook = bookMapper.toModel(requestDto);
         Set<Category> categories = getCategoriesByIds(requestDto.getCategoryIds());

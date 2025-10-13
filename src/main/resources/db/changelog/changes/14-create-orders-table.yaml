@@ -2,6 +2,11 @@ databaseChangeLog:
   - changeSet:
       id: create-orders-table
       author: KLICKICE
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          - tableExists:
+              tableName: orders
       changes:
         - createTable:
             tableName: orders
@@ -54,11 +59,16 @@ databaseChangeLog:
             sql: |
               ALTER TABLE orders
               ADD CONSTRAINT chk_order_status
-              CHECK (status IN ('PENDING','COMPLETED','DELIVERED','CANCELLED'));
+              CHECK (status IN ('PENDING','COMPLETED','DELIVERED','CANCELLED'))
 
   - changeSet:
       id: create-order-items-table
       author: KLICKICE
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          - tableExists:
+              tableName: order_items
       changes:
         - createTable:
             tableName: order_items
